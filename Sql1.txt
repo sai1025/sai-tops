@@ -1,0 +1,49 @@
+RDBMS:
+
+Data:
+
+Buisness Analyst
+Data ANalyst
+Data Scientist
+Data Engineer => Big Data=> Hadoop
+
+Database:
+
+SQL : Structured Query Language
+Data Warehouse:
+
+Cloud:
+
+Non Relational Database: nosql :json
+
+API:
+
+REST API:Representational state transfer
+
+Data:=> Database
+
+DBA:
+
+SQL:
+
+DDL:Data defination language:Create,alter,drop,truncate
+DML:Data Manipulation language:insert,delete,update,call,explain call
+DCL:Data Control language:
+TCL:Transaction control language:
+DQL:Data Query language:select
+
+Table:Schema
+Row:Tuple
+Column:field
+
+Data types:
+Numeric Data Types:
+
+Normalization:
+Constarints:
+Primary key:only key
+unique key:multiple in one table
+not null
+default
+check
+foreign key

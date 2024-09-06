@@ -1,0 +1,49 @@
+mysql> select * from patients;
++------+--------+-------------+---------------+---------------+
+| id   | name   | dateOfBirth | lastVisitDate | nextVisitDate |
++------+--------+-------------+---------------+---------------+
+| 1001 | rauf   | 1991-12-31  | 2012-01-20    | 2014-02-05    |
+| 1002 | parth  | 2011-10-29  | 2012-09-29    | 2014-02-05    |
+| 1003 | dinesh | 2011-01-30  | 2024-09-04    | 2026-02-05    |
++------+--------+-------------+---------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from patients where timestampdiff(day,lastVisitDate,curdate())>60;
++------+-------+-------------+---------------+---------------+
+| id   | name  | dateOfBirth | lastVisitDate | nextVisitDate |
++------+-------+-------------+---------------+---------------+
+| 1001 | rauf  | 1991-12-31  | 2012-01-20    | 2014-02-05    |
+| 1002 | parth | 2011-10-29  | 2012-09-29    | 2014-02-05    |
++------+-------+-------------+---------------+---------------+
+2 rows in set (0.00 sec)
+
+mysql> select * from patients where timestampdiff(year,dateofBirth,curdate())>=18;
++------+------+-------------+---------------+---------------+
+| id   | name | dateOfBirth | lastVisitDate | nextVisitDate |
++------+------+-------------+---------------+---------------+
+| 1001 | rauf | 1991-12-31  | 2012-01-20    | 2014-02-05    |
++------+------+-------------+---------------+---------------+
+1 row in set (0.00 sec)
+
+mysql> update patients set nextVisitDate=adddate(curdate(),interval 6 month) where name='rauf';
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from patients;
++------+--------+-------------+---------------+---------------+
+| id   | name   | dateOfBirth | lastVisitDate | nextVisitDate |
++------+--------+-------------+---------------+---------------+
+| 1001 | rauf   | 1991-12-31  | 2012-01-20    | 2025-03-04    |
+| 1002 | parth  | 2011-10-29  | 2012-09-29    | 2014-02-05    |
+| 1003 | dinesh | 2011-01-30  | 2024-09-04    | 2026-02-05    |
++------+--------+-------------+---------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql>
+
+
+
+
+
+
+

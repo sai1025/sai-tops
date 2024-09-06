@@ -1,0 +1,33 @@
+Select Ptients who alst visited on a particular range of dates.
+
+keywords:
+
+limit
+between
+not between
+having
+order by
+group by:avg,sum,count,std,max,min
+
+variable:
+
+DDL: create,drop,alter,truncate
+DML:insert,update,delete,call,explain call
+DCL:grant,revoke
+TCL:commit,rollback,savepoints,set constraints
+DQL:select
+
+ACID 
+
+A => Atomocity
+
+C => Consistency
+
+I => Integrity
+
+D => Durability
+
+@name="sainath"
+
+as -alias
+

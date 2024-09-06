@@ -1,0 +1,210 @@
+mysql> select * from student;
++----+------+------+--------+
+| id | name | age  | salary |
++----+------+------+--------+
+|  1 | A    |   20 | 200000 |
+|  2 | B    |   30 | 300000 |
+|  3 | c    |   23 | 340000 |
+|  4 | D    |   24 | 330000 |
+|  5 | E    |   25 | 230000 |
+|  6 | E    |   21 | 350000 |
++----+------+------+--------+
+6 rows in set (0.19 sec)
+
+mysql> select * from average_salary;
++---------+
+| avg_sal |
++---------+
+|  291667 |
++---------+
+1 row in set (0.26 sec)
+
+mysql> create trigger student_au after update on student
+    -> for each row
+    -> update average_salary set avg_sal=(select avg(salary) from student);
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> update student set salary=100000 where id=1;
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from average_salary;
++---------+
+| avg_sal |
++---------+
+|  275000 |
++---------+
+1 row in set (0.00 sec)
+
+mysql> select * from student;
++----+------+------+--------+
+| id | name | age  | salary |
++----+------+------+--------+
+|  1 | A    |   20 | 100000 |
+|  2 | B    |   30 | 300000 |
+|  3 | c    |   23 | 340000 |
+|  4 | D    |   24 | 330000 |
+|  5 | E    |   25 | 230000 |
+|  6 | E    |   21 | 350000 |
++----+------+------+--------+
+6 rows in set (0.00 sec)
+
+mysql> create trigger student_bu on student
+    -> for each row
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'on student
+for each row' at line 1
+mysql> delimiter //
+mysql> create trigger student_bu on student
+    -> for each row
+    -> if new.salary<100000 then
+    -> signal sqlstate '500002' set message_text="very less increment";
+    -> end if;
+    -> //
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'on student
+for each row
+if new.salary<100000 then
+signal sqlstate '500002' set m' at line 1
+mysql> delimiter //
+mysql> create trigger student_bu before update on student
+    -> for each row
+    -> if new.salary<200000 then
+    -> signal sqlstate '500002' set message_text="very less increment";
+    -> endif;
+    -> //
+ERROR 1407 (42000): Bad SQLSTATE: '500002'
+mysql> delimiter //
+mysql> create trigger student_bu before update on student
+    -> for each row
+    -> if new.salary<200000 then
+    -> signal sqlstate '50001' set message_text="very less increment";
+    -> endif;
+    -> //
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 5
+mysql> delimiter //
+mysql> create trigger student_bu before update on student
+    -> if new.salary<100000 then
+    -> signal sqlstate '50001' set message_text="very less increment";
+    -> end if;
+    -> //
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'if new.salary<100000 then
+signal sqlstate '50001' set message_text="very less in' at line 2
+mysql> delimiter //
+mysql> create trigger student_bu before update on student
+    -> for each row
+    -> if new.salary<100000 then
+    -> signal sqlstate '50001' set message_text="very less increment";
+    -> end if;
+    -> //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+mysql> create trigger student_ad after delete on student
+    -> for each row
+    -> update average_salary set avg_sal=(select avg(salary) from student);
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from student;
++----+------+------+--------+
+| id | name | age  | salary |
++----+------+------+--------+
+|  1 | A    |   20 | 100000 |
+|  2 | B    |   30 | 300000 |
+|  3 | c    |   23 | 340000 |
+|  4 | D    |   24 | 330000 |
+|  5 | E    |   25 | 230000 |
+|  6 | E    |   21 | 350000 |
++----+------+------+--------+
+6 rows in set (0.00 sec)
+
+mysql> select * from average_salary;
++---------+
+| avg_sal |
++---------+
+|  275000 |
++---------+
+1 row in set (0.00 sec)
+
+mysql> delete from student where id=6;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from average_salary;
++---------+
+| avg_sal |
++---------+
+|  260000 |
++---------+
+1 row in set (0.00 sec)
+
+mysql> select * from student;
++----+------+------+--------+
+| id | name | age  | salary |
++----+------+------+--------+
+|  1 | A    |   20 | 100000 |
+|  2 | B    |   30 | 300000 |
+|  3 | c    |   23 | 340000 |
+|  4 | D    |   24 | 330000 |
+|  5 | E    |   25 | 230000 |
++----+------+------+--------+
+5 rows in set (0.00 sec)
+
+mysql> create trigger student_bd before delete on student
+    -> for each row
+    -> if old.salary>330000 then
+    -> signal sqlstate '50003' set message_text="layoffing highly paid employees"
+    -> end if;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'end if' at line 5
+mysql> delimiter //
+mysql> create trigger student_bd before delete on student
+    -> for each row
+    -> if old.salary>330000 then
+    -> signal sqlstate '50003' set message_text="layoffing highly paid employees";
+    -> end if ;
+    -> //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delete from student where salary>330000;
+    -> //
+ERROR 1644 (50003): layoffing highly paid employees
+mysql> select * from student;
+    -> //
++----+------+------+--------+
+| id | name | age  | salary |
++----+------+------+--------+
+|  1 | A    |   20 | 100000 |
+|  2 | B    |   30 | 300000 |
+|  3 | c    |   23 | 340000 |
+|  4 | D    |   24 | 330000 |
+|  5 | E    |   25 | 230000 |
++----+------+------+--------+
+5 rows in set (0.00 sec)
+
+mysql> delimiter ;
+mysql> select * from average_salary;
++---------+
+| avg_sal |
++---------+
+|  260000 |
++---------+
+1 row in set (0.00 sec)
+
+mysql> select * from average_salary;
++---------+
+| avg_sal |
++---------+
+|  260000 |
++---------+
+1 row in set (0.00 sec)
+
+mysql>
+mysql> select * from student;
++----+------+------+--------+
+| id | name | age  | salary |
++----+------+------+--------+
+|  1 | A    |   20 | 100000 |
+|  2 | B    |   30 | 300000 |
+|  3 | c    |   23 | 340000 |
+|  4 | D    |   24 | 330000 |
+|  5 | E    |   25 | 230000 |
++----+------+------+--------+
+5 rows in set
